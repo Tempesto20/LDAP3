@@ -10,11 +10,16 @@ PORT = 636
 server = Server(AD_SERVER)   # use_ssl=True          tls=Tls(validate=ssl.CERT_NONE)    
 conn = Connection(server, user=AD_USER, password=AD_PASSWORD)  
 
+# Подключение к серверу LDAP
+if not conn.bind():
+    print('Ошибка подключения к серверу LDAP:', conn.result)
 
-conn.bind()
-# conn.start_tls() 
+# Удаление пользователя из папки в домене
+dn = 'cn=Литуненко Игорь Ильич,ou=LOL,DC=test,DC=ru'  # DN (distinguished name) пользователя
+if conn.delete(dn):
+    print('Пользователь успешно удален')
+else:
+    print('Ошибка удаления пользователя:', conn.result)
 
-conn.delete('cn=Литуненко Игорь Ильич,ou=LOL')
-print(conn.result)
-
+# Закрытие соединения с сервером LDAP
 conn.unbind()
