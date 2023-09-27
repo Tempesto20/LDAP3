@@ -1,33 +1,54 @@
 from ldap3 import Server, Connection, ALL, NTLM, Tls
 import ssl
 
-AD_SERVER = 'ldap://192.168.88.239:389'
+# AD_SERVER = 'ldap://192.168.88.239:389'
+# AD_SERVER = 'ldap://192.168.88.239:636'
+AD_SERVER = 'ldaps://192.168.88.239'
+# AD_SERVER = 'ldap://192.168.88.239'
+# AD_SERVER = 'ldap://SERVER.test.ru'
 AD_USER = 'TEST\Администратор'
 AD_PASSWORD = 'admin20!'
 # PORT = 389
 PORT = 636
 
-# tls = Tls(local_private_key_file='client_private_key.pem', local_certificate_file='client_cert.pem', validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1, ca_certs_file='ca_certs.b64')
+# LDAP_PEM = 'addPerson/LDAPS_14.09.2023.pem'
+LDAP_PEM = './LDAPS_14.09.2023.pem'
+
 # Создать рпавило на серваке для коннекта по защищённому соединению 
 # для тсл ии ссл, подключения, сертифицированного
 
-server = Server(AD_SERVER)   # use_ssl=True          tls=Tls(validate=ssl.CERT_NONE)    
-conn = Connection(server, user=AD_USER, password=AD_PASSWORD)  
 
+# server = Server(AD_SERVER, use_ssl=True, tls=Tls(validate=ssl.CERT_NONE)     )   # use_ssl=True          tls=Tls(validate=ssl.CERT_NONE)    
+# conn = Connection(server, user=AD_USER, password=AD_PASSWORD)  
 
-
-# tls = Tls(local_private_key_file = 'key.pem', local_certificate_file = 'cert.pem', validate = ssl.CERT_REQUIRED, version = ssl.PROTOCOL_TLSv1,
-#           ca_certs_file = 'cacert.b64')
-# server = Server(host = test_server, port = test_port_ssl, use_ssl = True, tls = tls)
-# connection = Connection(server, auto_bind = True, version = 3, client_strategy = test_strategy, authentication = SASL,
-#                         sasl_mechanism = 'EXTERNAL', sasl_credentials = 'username')
 
 
 # провести проверку на наличие пользователя с этими данными if else потом старт по даннымм пользователя 
 # работа будет с несколькими сервисами - предусматреть различные вопросы 
 # проверка во всех сервисах и в дальнейшем создаём
 
-conn.bind()
+
+
+# tls = Tls(local_private_key_file='client_private_key.pem', local_certificate_file='client_cert.pem', validate=ssl.CERT_REQUIRED, 
+#           version=ssl.PROTOCOL_TLSv1, ca_certs_file='ca_certs.b64')
+
+
+tls = Tls(validate=ssl.CERT_NONE)
+
+
+server = Server(AD_SERVER,  port = 636, use_ssl = True  )
+conn = Connection(server, user=AD_USER, password=AD_PASSWORD) 
+ 
+conn.start_tls()
+
+
+
+
+
+
+
+
+# conn.bind()
 # conn.start_tls() 
 def create_user(username, password, givenName, sn, displayName, 
                 description, room, Officephone, mailWork, streetAddress,
@@ -70,7 +91,7 @@ def create_user(username, password, givenName, sn, displayName,
         'department': department,
         'Company': Company,
 
-        'userPassword': password,  # не работает
+        # 'userPassword': password,  # не работает
         # 'unicodePwd':'IgA3ACQANQBNAHMAIwA0AEQAaQBHACIA',
 
 
@@ -116,7 +137,7 @@ create_user(
 if conn.result['result'] == 0:
     print('Пользователь успешно добавлен')
 else:
-    print('Ошибка при добавлении пользователя:', conn.result['description'])
-
+    print('Ошибка при добавлении пользователя:', conn.result)
+    # print('Ошибка при добавлении пользователя:', conn.result['description'])
 
 conn.unbind()

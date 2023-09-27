@@ -54,7 +54,7 @@ def create_user(username, password, givenName, sn, displayName,
         'department': department,
         'Company': Company,
 
-        'userPassword': password,  # не работает
+        # 'userPassword': password,  # не работает
         # 'unicodePwd':'IgA3ACQANQBNAHMAIwA0AEQAaQBHACIA',
 
 
@@ -83,14 +83,14 @@ create_user(
             'Директор Инженерного центра', 
             '708',
             '700', 
-            'lili@confident.ru',
+            'lil@confident.ru',
             'проспект Обуховской обор.,д.51,литера K',
-            'lili@mail.ru',
+            'lil@mail.ru',
             'Sankt Petersburg', 
             'Ленинградская область', 
             'Россия',
-            'lili@test.ru',
-            'lili',
+            'lil@test.ru',
+            'lil',
             '+7-900-000-00-00',
             'работает с 10.10.2023','Директор СОБИС',
             'СОБИС',
